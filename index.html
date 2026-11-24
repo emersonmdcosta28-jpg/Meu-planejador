@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -222,32 +221,47 @@ ${bar(count(),total)}
 </div>`;
 }
 
+const sequence=[];
+{
+const cursor=subjects.map(()=>0);
+const pattern=[0,1,3,0,1,2,0,1,4];
+
+while(cursor.some((n,i)=>n<subjects[i].topics.length)){
+for(const i of pattern){
+if(cursor[i]<subjects[i].topics.length){
+sequence.push([i,cursor[i]++]);
+}
+}
+}
+}
+
 function home(){
 active(0);
-const day=new Date().getDay(),
-week=Math.floor((Date.now()-new Date(2026,10,23).getTime())/604800000),
-rotation=[3,2,4],
-s=({1:0,2:1,3:rotation[((week%3)+3)%3],4:0,5:1})[day];
 
-app.innerHTML=`<p class="date">${new Date().toLocaleDateString('pt-BR',{dateStyle:'full'})}</p>
-${hero()}
-<h2>Estudo de hoje</h2>`;
+const pending=sequence.filter(([s,t])=>!data.done[key(s,t)]);
 
-if(day===0){
-app.innerHTML+='<div class="card">Domingo: descanso.</div>';
-}else if(day===6){
-app.innerHTML+='<div class="card"><h2>Simulado semanal</h2><button onclick="simulation()">Realizar simulado</button></div>';
-}else{
-const t=next(s),
-finished=subjects[s].topics.some((x,i)=>data.done[key(s,i)]&&new Date(data.done[key(s,i)]).toDateString()===new Date().toDateString());
+app.innerHTML=hero()+'<h2>Continue de onde parou</h2>';
 
-app.innerHTML+=`<div class="card">
-<small>${subjects[s].name} · 2 horas</small>
-<h2>${finished?'Estudo de hoje concluído ✓':t<0?'Disciplina concluída':subjects[s].topics[t]}</h2>
-${t>=0?`<button onclick="lesson(${s},${t})">${finished?'Adiantar próximo assunto':'Iniciar estudo'} →</button>`:''}
+if(pending.length){
+const [s,t]=pending[0];
+
+app.innerHTML+=`
+<div class="card">
+<small>${subjects[s].name} · 2 horas sugeridas</small>
+<h2>${subjects[s].topics[t]}</h2>
+<button onclick="lesson(${s},${t})">Iniciar estudo →</button>
 </div>`;
+}else{
+app.innerHTML+='<div class="card">Todos os conteúdos concluídos!</div>';
 }
-app.innerHTML+='<h2>Minhas disciplinas</h2>'+cards();
+
+app.innerHTML+='<h2>Minha trilha de estudos</h2>'+
+sequence.map(([s,t],i)=>`
+<div class="card ${data.done[key(s,t)]?'done':''}">
+<small>ETAPA ${i+1} · ${data.done[key(s,t)]?'✓ Concluído':'Pendente'}</small>
+<p><strong>${subjects[s].icon} ${subjects[s].name}</strong><br>${subjects[s].topics[t]}</p>
+<button onclick="lesson(${s},${t})">${data.done[key(s,t)]?'Consultar':'Estudar'}</button>
+</div>`).join('');
 }
 
 function disciplines(){
@@ -257,7 +271,8 @@ app.innerHTML='<h2>Minhas disciplinas</h2>'+cards();
 
 function openSubject(s){
 active(1);
-app.innerHTML=`<button class="back" onclick="disciplines()">← Disciplinas</button>
+app.innerHTML=`
+<button class="back" onclick="disciplines()">← Disciplinas</button>
 <h2>${subjects[s].name}</h2>`+
 subjects[s].topics.map((t,i)=>`
 <div class="card ${data.done[key(s,i)]?'done':''}">
@@ -270,6 +285,7 @@ subjects[s].topics.map((t,i)=>`
 
 function lesson(s,t){
 active(1);
+
 const id=key(s,t),
 topic=subjects[s].topics[t];
 
@@ -277,6 +293,7 @@ if(!(id in data.previous)){
 const prev=subjects[s].topics.map((x,i)=>i)
 .filter(i=>i!==t&&data.done[key(s,i)])
 .sort((a,b)=>data.done[key(s,b)]-data.done[key(s,a)])[0];
+
 data.previous[id]=prev===undefined?null:prev;
 save();
 }
@@ -285,15 +302,17 @@ const prev=data.previous[id],tasks=[];
 
 if(prev!==null){
 const old=subjects[s].topics[prev];
-tasks.push(
-['review','Revisar: '+old,''],
-['old','Resolver 10 questões: '+old,link(search(old+' questões concurso'),'Buscar questões anteriores')]
-);
+
+tasks.push([
+'old',
+'Resolver 10 questões: '+old,
+link(search(old+' questões concurso'),'Buscar questões anteriores')
+]);
 }
 
 tasks.push(
 ['video','Assistir à videoaula: '+topic,link(youtube(topic+' para concursos'),'Buscar videoaula no YouTube')],
-['pdf','Ler PDF e resumo sobre '+topic,link(search(topic+' apostila PDF concurso'),'Buscar PDF')],
+['pdf','Ler PDF sobre '+topic,link(search(topic+' apostila PDF concurso'),'Buscar PDF')],
 ['questions','Resolver 10 questões: '+topic,link(search(topic+' questões comentadas concurso'),'Buscar questões')],
 ['correct','Corrigir as questões e entender os erros','']
 );
@@ -310,10 +329,10 @@ app.innerHTML=`
 </div>
 <h2>Minha sessão de estudo</h2>
 <div class="card">
-${prev===null?'<p>Primeiro assunto: sem revisão anterior.</p>':''}
+${prev===null?'<p>Primeiro assunto: sem questões anteriores.</p>':''}
 ${tasks.map((x,i)=>`
 <div class="task">
-<small>ETAPA ${i+1}</small>
+<small>ETAPA ${i+1} · ${{old:20,video:35,pdf:25,questions:25,correct:15}[x[0]]} min</small>
 <label>
 <input type="checkbox" ${data.tasks[id][x[0]]?'checked':''} ${data.done[id]?'disabled':''} onchange="mark('${id}','${x[0]}',this.checked)">
 <span>${x[1]}</span>
@@ -322,6 +341,7 @@ ${x[2]}
 </div>`).join('')}
 <button onclick="finish(${s},${t},${prev!==null})">${data.done[id]?'✓ Finalizado':'Finalizar conteúdo'}</button>
 </div>`;
+
 updateSession();
 }
 
@@ -342,15 +362,18 @@ updateSession();
 function finish(s,t,review){
 const id=key(s,t);
 if(data.done[id])return;
+
 const req=['video','pdf','questions','correct'];
-if(review)req.push('review','old');
+if(review)req.push('old');
+
 if(!req.every(k=>data.tasks[id][k])){
 alert('Conclua todas as etapas primeiro.');
 return;
 }
+
 data.done[id]=Date.now();
 save();
-openSubject(s);
+home();
 }
 
 function weekStart(){
@@ -362,13 +385,17 @@ return d;
 
 function simulation(){
 active(2);
+
 const start=weekStart(),end=new Date(start);
 end.setDate(end.getDate()+7);
+
 const w=start.toISOString(),items=[];
 
 subjects.forEach((s,i)=>s.topics.forEach((t,j)=>{
 const d=data.done[key(i,j)];
-if(d>=start.getTime()&&d<end.getTime())items.push({subject:s.name,topic:t});
+if(d>=start.getTime()&&d<end.getTime()){
+items.push({subject:s.name,topic:t});
+}
 }));
 
 const n=items.length*5;
@@ -386,7 +413,8 @@ ${items.map(x=>`
 <p>${x.topic} — 5 questões</p>
 ${link(search(x.topic+' questões concurso'),'Buscar questões')}
 </div>`).join('')}
-${data.tests[w]?`<p>✓ Simulado concluído: ${data.tests[w].correct}/${data.tests[w].total} acertos.</p>`:n?`
+${data.tests[w]&&data.tests[w].total===n?`
+<p>✓ Simulado concluído: ${data.tests[w].correct}/${data.tests[w].total} acertos.</p>`:n?`
 <p>Quantidade de acertos:</p>
 <input id="score" type="number" min="0" max="${n}">
 <button onclick="finishTest(${n})">Finalizar simulado</button>`:'<p>Nenhum assunto concluído nesta semana.</p>'}
@@ -394,11 +422,14 @@ ${data.tests[w]?`<p>✓ Simulado concluído: ${data.tests[w].correct}/${data.tes
 }
 
 function finishTest(n){
-const raw=document.getElementById('score').value,c=Number(raw);
+const raw=document.getElementById('score').value,
+c=Number(raw);
+
 if(raw===''||!Number.isInteger(c)||c<0||c>n){
 alert('Informe uma quantidade válida.');
 return;
 }
+
 data.tests[weekStart().toISOString()]={correct:c,total:n};
 save();
 simulation();
@@ -406,6 +437,7 @@ simulation();
 
 function progressPage(){
 active(3);
+
 app.innerHTML='<h2>Meu progresso</h2>'+hero()+`
 <div class="card metrics">
 <div><strong>${count()}</strong>Concluídos</div>
