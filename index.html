@@ -1,382 +1,61 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#29245c">
 <title>Meu Planejador</title>
 <style>
 *{box-sizing:border-box}
-:root{
---primary:#5145cd;
---text:#182238;
---muted:#748096;
---border:#e6eaf1;
---background:#f1f4f9;
-}
-body{
-margin:0;
-background:var(--background);
-font-family:system-ui,-apple-system,Arial,sans-serif;
-color:var(--text);
-padding-bottom:110px;
-}
-header{
-background:linear-gradient(135deg,#25204e,#5145cd);
-color:white;
-padding:30px 22px 36px;
-border-radius:0 0 28px 28px;
-font-size:13px;
-box-shadow:0 8px 24px #5145cd22;
-}
-header h2{
-font-size:26px;
-letter-spacing:-1px;
-margin:0 0 8px;
-}
-header .brand{
-display:inline-block;
-background:#ffffff20;
-padding:7px 12px;
-border-radius:8px;
-font-size:11px;
-font-weight:600;
-letter-spacing:1px;
-margin-bottom:16px;
-}
-main{
-max-width:800px;
-margin:auto;
-padding:20px 16px;
-}
-.card{
-background:white;
-border-radius:18px;
-padding:20px;
-margin-bottom:16px;
-border:1px solid var(--border);
-box-shadow:0 4px 16px #18223806;
-}
+body{margin:0;background:#f1f4fa;color:#20263b;font:15px system-ui,sans-serif;padding-bottom:100px}
+header{background:linear-gradient(135deg,#25204e,#5145cd);color:white;padding:26px 22px;border-radius:0 0 25px 25px}
+header h1{font-size:25px;margin:12px 0 6px}
+header small{color:#ddd9ff}
+main{max-width:760px;margin:auto;padding:18px}
+h2{font-size:19px}
+p{line-height:1.5}
+.card{background:white;border:1px solid #e5e8f0;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 4px 15px #20263b0a}
 .card h2{margin-top:0}
-.hero{
-background:linear-gradient(135deg,#29245c,#5145cd);
-color:white;
-border:none;
-padding:24px;
-}
+.hero{background:linear-gradient(135deg,#29245c,#5145cd);color:white}
 .hero small{color:#dedaff}
-.hero progress::-webkit-progress-bar{background:#ffffff30}
-.hero progress::-webkit-progress-value{background:#c4b5fd}
-.hero progress::-moz-progress-bar{background:#c4b5fd}
-.hero-number{
-font-size:36px;
-font-weight:750;
-letter-spacing:-2px;
-margin:10px 0;
-}
-.today{
-border-top:4px solid var(--primary);
-}
-.today small{
-display:inline-block;
-background:#eeecff;
-color:var(--primary);
-padding:6px 10px;
-border-radius:8px;
-font-weight:600;
-margin-bottom:12px;
-}
-button,a.btn{
-display:block;
-width:100%;
-padding:14px 16px;
-margin-top:12px;
-background:var(--primary);
-color:white;
-border:0;
-border-radius:12px;
-text-decoration:none;
-text-align:center;
-font-family:inherit;
-font-size:14px;
-font-weight:600;
-cursor:pointer;
-transition:transform .15s,opacity .15s;
-}
-button:active,a.btn:active{
-transform:scale(.98);
-opacity:.85;
-}
-button:focus-visible,a:focus-visible{
-outline:3px solid #a99df5;
-outline-offset:3px;
-}
-a.btn{
-background:#eeecff;
-color:var(--primary);
-}
-small{
-color:var(--muted);
-font-size:12px;
-}
-h2{
-font-size:20px;
-letter-spacing:-.5px;
-line-height:1.4;
-}
-p{line-height:1.6}
-.date{
-font-size:12px;
-color:var(--muted);
-text-transform:capitalize;
-}
-.section-title{
-font-size:19px;
-margin:25px 0 14px;
-}
-.subject-card{
-padding:18px;
-}
-.subject-top{
-display:flex;
-align-items:center;
-gap:13px;
-}
-.subject-icon{
-width:48px;
-height:48px;
-border-radius:14px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:25px;
-flex-shrink:0;
-}
-.subject-name{
-flex:1;
-font-size:15px;
-font-weight:700;
-}
-.subject-percent{
-font-size:15px;
-font-weight:700;
-color:var(--primary);
-}
-.subject-card button{
-background:#f3f4f8;
-color:var(--text);
-padding:11px;
-}
-.topic-card{
-padding:17px;
-}
-.topic-card strong{
-font-size:15px;
-line-height:1.5;
-}
-.topic-card button{
-background:#eeecff;
-color:var(--primary);
-}
-.topic-card.finished{
-border-left:4px solid #22a06b;
-}
-.topic-card.finished button{
-background:#e9f7ef;
-color:#16834b;
-}
-.status{
-display:inline-block;
-padding:5px 9px;
-border-radius:7px;
-background:#f0f2f6;
-font-size:11px;
-color:#687386;
-}
-.status.finished{
-background:#e9f7ef;
-color:#16834b;
-}
-.task{
-background:#f8f9fc;
-border:1px solid var(--border);
-padding:15px;
-border-radius:13px;
-margin-top:12px;
-}
-.task label{
-padding:0;
-border:0;
-display:flex;
-align-items:flex-start;
-gap:10px;
-}
-.task a.btn{
-margin-top:12px;
-}
-.task:has(input:checked){
-background:#eef8f2;
-border-color:#c8e8d4;
-}
-.step{
-font-size:10px;
-font-weight:700;
-letter-spacing:1px;
-color:var(--muted);
-margin-bottom:10px;
-}
-label{
-display:block;
-padding:18px 0;
-border-bottom:1px solid var(--border);
-font-size:14px;
-line-height:1.6;
-}
-input[type=checkbox]{
-accent-color:#16834b;
-width:21px;
-height:21px;
-margin:0;
-flex-shrink:0;
-}
-input[type=number]{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:1px solid var(--border);
-border-radius:10px;
-font-size:16px;
-}
-progress{
-width:100%;
-height:8px;
-border:0;
-border-radius:20px;
-overflow:hidden;
-appearance:none;
-margin:12px 0;
-background:#e9edf3;
-}
-progress::-webkit-progress-bar{
-background:#e9edf3;
-border-radius:20px;
-}
-progress::-webkit-progress-value{
-background:linear-gradient(90deg,#5145cd,#9b87f5);
-border-radius:20px;
-}
-progress::-moz-progress-bar{
-background:#5145cd;
-border-radius:20px;
-}
-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-display:flex;
-gap:4px;
-padding:10px 6px calc(10px + env(safe-area-inset-bottom));
-background:white;
-border-top:1px solid var(--border);
-box-shadow:0 -4px 20px #1822380a;
-z-index:100;
-}
-nav button{
-flex:1;
-margin:0;
-font-size:11px;
-padding:9px 2px;
-background:transparent;
-color:#748096;
-border-radius:12px;
-}
-nav button.active{
-background:#eeecff;
-color:var(--primary);
-}
-nav svg{
-display:block;
-width:23px;
-height:23px;
-margin:0 auto 5px;
-stroke:currentColor;
-fill:none;
-stroke-width:1.8;
-stroke-linecap:round;
-stroke-linejoin:round;
-}
-.back{
-width:auto;
-background:#e9e7fa;
-color:var(--primary);
-margin-bottom:18px;
-padding:10px 14px;
-}
-.metrics{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin-top:16px;
-}
-.metric{
-background:#f5f4fc;
-border-radius:13px;
-padding:16px;
-}
-.metric strong{
-display:block;
-font-size:26px;
-color:var(--primary);
-}
-.notice{
-background:#f1efff;
-border-radius:10px;
-padding:12px;
-font-size:13px;
-color:#5145a0;
-}
-.success{
-color:#16834b;
-font-weight:600;
-}
-@media(min-width:800px){
-main{padding:30px}
-nav{justify-content:center}
-nav button{max-width:180px}
-header{padding-left:max(24px,calc((100% - 740px)/2))}
-}
+.big{font-size:36px;font-weight:750}
+small{color:#626d83}
+button,a.btn{display:block;width:100%;padding:13px;margin-top:12px;border:0;border-radius:11px;background:#5145cd;color:white;font:600 14px system-ui;text-align:center;text-decoration:none;cursor:pointer}
+a.btn,.back{background:#eeecff;color:#5145cd}
+progress{width:100%;height:9px;accent-color:#5145cd;margin:12px 0}
+label{display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+input[type=checkbox]{width:21px;height:21px;flex-shrink:0;accent-color:#16834b}
+input[type=number]{width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:9px}
+.task{padding:14px;background:#f7f8fc;border-radius:12px;margin:12px 0}
+.task:has(input:checked){background:#e8f7ee}
+.done{border-left:4px solid #16834b}
+.subject{display:flex;align-items:center;gap:12px}
+.emoji{font-size:24px;background:#eeecff;padding:10px;border-radius:12px}
+.subject strong{flex:1}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:center;border-top:1px solid #e5e8f0;padding:8px 4px;z-index:10}
+nav button{max-width:180px;flex:1;background:white;color:#626d83;margin:0;padding:8px 2px;font-size:11px}
+nav button.active{color:#5145cd;background:#eeecff}
+nav span{display:block;font-size:22px}
+.date{text-transform:capitalize;color:#626d83}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metrics div{background:#eeecff;padding:12px;border-radius:12px}
+.metrics strong{display:block;font-size:25px;color:#5145cd}
 </style>
 </head>
 <body>
 <header>
-<div class="brand">PREPARAÇÃO PARA CONCURSOS</div>
-<h2>Meu Planejador</h2>
+<small>PREPARAÇÃO PARA CONCURSOS</small>
+<h1>Meu Planejador</h1>
 Prefeitura de Imperatriz – MA
 </header>
-
 <nav>
-<button id="nav-home" onclick="home()">
-<svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v11h-6v-7H9v7H3z"/></svg>
-Início
-</button>
-<button id="nav-subjects" onclick="disciplines()">
-<svg viewBox="0 0 24 24"><path d="M12 6C8 3 5 3 2 4v16c4-1 7 0 10 2 3-2 6-3 10-2V4c-3-1-6-1-10 2zM12 6v16"/></svg>
-Disciplinas
-</button>
-<button id="nav-tests" onclick="simulation()">
-<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="18" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4M9 18h6"/></svg>
-Simulados
-</button>
-<button id="nav-progress" onclick="progressPage()">
-<svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 17v-5M12 17V8M17 17V4"/></svg>
-Progresso
-</button>
+<button onclick="home()"><span>⌂</span>Início</button>
+<button onclick="disciplines()"><span>▤</span>Disciplinas</button>
+<button onclick="simulation()"><span>✓</span>Simulados</button>
+<button onclick="progressPage()"><span>▥</span>Progresso</button>
 </nav>
-
 <main id="app"></main>
-
 <script>
 const subjects=[
 {name:"Língua Portuguesa",icon:"📘",topics:[
@@ -499,196 +178,174 @@ const subjects=[
 ];
 
 let data=JSON.parse(localStorage.getItem("meuPlanejador")||"{}");
-data.done=data.done||{};
-data.tasks=data.tasks||{};
-data.previous=data.previous||{};
-data.tests=data.tests||{};
+for(const k of ["done","tasks","previous","tests"])data[k]=data[k]||{};
 
-const app=document.getElementById("app");
-const key=(s,t)=>s+"-"+t;
-const save=()=>localStorage.setItem("meuPlanejador",JSON.stringify(data));
-const search=q=>"https://www.google.com/search?q="+encodeURIComponent(q);
-const youtube=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
-const link=(url,text)=>`<a class="btn" target="_blank" rel="noopener" href="${url}">${text} ↗</a>`;
+const app=document.getElementById("app"),
+key=(s,t)=>s+"-"+t,
+save=()=>localStorage.setItem("meuPlanejador",JSON.stringify(data)),
+search=q=>"https://www.google.com/search?q="+encodeURIComponent(q),
+youtube=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q),
+link=(u,t)=>`<a class="btn" target="_blank" rel="noopener" href="${u}">${t} ↗</a>`;
 
-const colors=["#e8efff","#fff0df","#f0e8ff","#e1f5ec","#fff4d7"];
+const total=subjects.reduce((a,s)=>a+s.topics.length,0),
+count=()=>Object.keys(data.done).length,
+bar=(n,m)=>`<progress value="${n}" max="${m}"></progress>`,
+next=s=>subjects[s].topics.findIndex((x,t)=>!data.done[key(s,t)]);
 
-function activate(name){
-document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-document.getElementById("nav-"+name).classList.add("active");
+function active(i){
+document.querySelectorAll('nav button').forEach((b,j)=>b.classList.toggle('active',i===j));
 window.scrollTo(0,0);
-}
-
-function next(s){
-return subjects[s].topics.findIndex((x,t)=>!data.done[key(s,t)]);
-}
-
-function home(){
-activate("home");
-const day=new Date().getDay();
-const week=Math.floor((Date.now()-new Date(2026,10,23).getTime())/604800000);
-const rotation=[3,2,4];
-const s=({1:0,2:1,3:rotation[((week%3)+3)%3],4:0,5:1})[day];
-
-const total=subjects.reduce((a,s)=>a+s.topics.length,0);
-const done=Object.keys(data.done).length;
-const pct=Math.round(done/total*100);
-
-app.innerHTML=`
-<p class="date">${new Date().toLocaleDateString("pt-BR",{dateStyle:"full"})}</p>
-<div class="card hero">
-<small>MINHA PREPARAÇÃO</small>
-<h2 style="margin-top:12px">Cada dia mais perto da aprovação.</h2>
-<small>Progresso geral</small>
-<div class="hero-number">${pct}%</div>
-<progress value="${done}" max="${total}"></progress>
-<small>${done} de ${total} conteúdos concluídos</small>
-</div>
-<h2 class="section-title">Estudo de hoje</h2>`;
-
-if(day===0){
-app.innerHTML+=`<div class="card today"><h2>Dia de descanso</h2><p>Descanse e recupere suas energias para a próxima semana.</p></div>`;
-}else if(day===6){
-app.innerHTML+=`<div class="card today"><small>SIMULADO SEMANAL</small><h2>Hora de testar seus conhecimentos</h2><p>5 questões de cada conteúdo estudado na semana.</p><button onclick="simulation()">Realizar simulado →</button></div>`;
-}else{
-const today=new Date().toDateString();
-const finished=subjects[s].topics.some((x,t)=>data.done[key(s,t)]&&new Date(data.done[key(s,t)]).toDateString()===today);
-const t=next(s);
-
-app.innerHTML+=`<div class="card today">
-<small>${subjects[s].icon} ${subjects[s].name}</small>
-<h2>${finished?"Estudo de hoje concluído ✓":t<0?"Disciplina concluída":subjects[s].topics[t]}</h2>
-${!finished&&t>=0?'<p style="color:#748096;font-size:13px">◷ 2 horas de estudo planejado</p>':""}
-${t>=0?`<button onclick="lesson(${s},${t})">${finished?"Adiantar próximo assunto":"Iniciar estudo"} →</button>`:""}
-</div>`;
-}
-
-app.innerHTML+=`<h2 class="section-title">Minhas disciplinas</h2>`+cards();
 }
 
 function cards(){
 return subjects.map((s,i)=>{
-const n=s.topics.filter((x,t)=>data.done[key(i,t)]).length;
-const pct=Math.round(n/s.topics.length*100);
-
-return `<div class="card subject-card">
-<div class="subject-top">
-<div class="subject-icon" style="background:${colors[i]}">${s.icon}</div>
-<div class="subject-name">${s.name}</div>
-<div class="subject-percent">${pct}%</div>
+let n=s.topics.filter((x,t)=>data.done[key(i,t)]).length;
+return `<div class="card">
+<div class="subject">
+<span class="emoji">${s.icon}</span>
+<strong>${s.name}</strong>
+<b>${Math.round(n/s.topics.length*100)}%</b>
 </div>
-<progress value="${n}" max="${s.topics.length}"></progress>
+${bar(n,s.topics.length)}
 <small>${n} de ${s.topics.length} conteúdos concluídos</small>
 <button onclick="openSubject(${i})">Abrir disciplina →</button>
 </div>`;
-}).join("");
+}).join('');
+}
+
+function hero(){
+return `<div class="card hero">
+<small>MEU PROGRESSO</small>
+<div class="big">${Math.round(count()/total*100)}%</div>
+${bar(count(),total)}
+<small>${count()} de ${total} conteúdos concluídos</small>
+</div>`;
+}
+
+function home(){
+active(0);
+const day=new Date().getDay(),
+week=Math.floor((Date.now()-new Date(2026,10,23).getTime())/604800000),
+rotation=[3,2,4],
+s=({1:0,2:1,3:rotation[((week%3)+3)%3],4:0,5:1})[day];
+
+app.innerHTML=`<p class="date">${new Date().toLocaleDateString('pt-BR',{dateStyle:'full'})}</p>
+${hero()}
+<h2>Estudo de hoje</h2>`;
+
+if(day===0){
+app.innerHTML+='<div class="card">Domingo: descanso.</div>';
+}else if(day===6){
+app.innerHTML+='<div class="card"><h2>Simulado semanal</h2><button onclick="simulation()">Realizar simulado</button></div>';
+}else{
+const t=next(s),
+finished=subjects[s].topics.some((x,i)=>data.done[key(s,i)]&&new Date(data.done[key(s,i)]).toDateString()===new Date().toDateString());
+
+app.innerHTML+=`<div class="card">
+<small>${subjects[s].name} · 2 horas</small>
+<h2>${finished?'Estudo de hoje concluído ✓':t<0?'Disciplina concluída':subjects[s].topics[t]}</h2>
+${t>=0?`<button onclick="lesson(${s},${t})">${finished?'Adiantar próximo assunto':'Iniciar estudo'} →</button>`:''}
+</div>`;
+}
+app.innerHTML+='<h2>Minhas disciplinas</h2>'+cards();
 }
 
 function disciplines(){
-activate("subjects");
-app.innerHTML="<h2>Minhas disciplinas</h2><p class='date'>Escolha uma disciplina para estudar.</p>"+cards();
+active(1);
+app.innerHTML='<h2>Minhas disciplinas</h2>'+cards();
 }
 
 function openSubject(s){
-activate("subjects");
-const n=subjects[s].topics.filter((x,t)=>data.done[key(s,t)]).length;
-
-app.innerHTML=`
-<button class="back" onclick="disciplines()">← Disciplinas</button>
-<div class="card">
-<div class="subject-top">
-<div class="subject-icon" style="background:${colors[s]}">${subjects[s].icon}</div>
-<h2 style="margin:0">${subjects[s].name}</h2>
-</div>
-<progress value="${n}" max="${subjects[s].topics.length}"></progress>
-<small>${n} de ${subjects[s].topics.length} conteúdos concluídos</small>
-</div>
-<h2 class="section-title">Conteúdo programático</h2>`+
-
-subjects[s].topics.map((t,i)=>{
-const finished=!!data.done[key(s,i)];
-return `<div class="card topic-card ${finished?"finished":""}">
-<small>CONTEÚDO ${String(i+1).padStart(2,"0")}</small>
+active(1);
+app.innerHTML=`<button class="back" onclick="disciplines()">← Disciplinas</button>
+<h2>${subjects[s].name}</h2>`+
+subjects[s].topics.map((t,i)=>`
+<div class="card ${data.done[key(s,i)]?'done':''}">
+<small>CONTEÚDO ${i+1}</small>
 <p><strong>${t}</strong></p>
-<span class="status ${finished?"finished":""}">${finished?"✓ Concluído":"Pendente"}</span>
-<button onclick="lesson(${s},${i})">${finished?"Consultar":"Estudar"} →</button>
-</div>`;
-}).join("");
+<small>${data.done[key(s,i)]?'✓ Concluído':'Pendente'}</small>
+<button onclick="lesson(${s},${i})">${data.done[key(s,i)]?'Consultar':'Estudar'}</button>
+</div>`).join('');
 }
 
 function lesson(s,t){
-activate("subjects");
-const id=key(s,t);
-const topic=subjects[s].topics[t];
+active(1);
+const id=key(s,t),
+topic=subjects[s].topics[t];
 
 if(!(id in data.previous)){
-const previous=subjects[s].topics.map((x,i)=>i).filter(i=>i!==t&&data.done[key(s,i)]).sort((a,b)=>data.done[key(s,b)]-data.done[key(s,a)])[0];
-data.previous[id]=previous===undefined?null:previous;
+const prev=subjects[s].topics.map((x,i)=>i)
+.filter(i=>i!==t&&data.done[key(s,i)])
+.sort((a,b)=>data.done[key(s,b)]-data.done[key(s,a)])[0];
+data.previous[id]=prev===undefined?null:prev;
 save();
 }
 
-const previous=data.previous[id];
-const tasks=[];
+const prev=data.previous[id],tasks=[];
 
-if(previous!==null){
-const old=subjects[s].topics[previous];
-tasks.push(["review","Revisar: "+old,""]);
-tasks.push(["old","Resolver 10 questões: "+old,link(search(old+" questões concurso"),"Buscar questões anteriores")]);
+if(prev!==null){
+const old=subjects[s].topics[prev];
+tasks.push(
+['review','Revisar: '+old,''],
+['old','Resolver 10 questões: '+old,link(search(old+' questões concurso'),'Buscar questões anteriores')]
+);
 }
 
-tasks.push(["video","Assistir à videoaula: "+topic,link(youtube(topic+" para concursos"),"Buscar videoaula no YouTube")]);
-tasks.push(["pdf","Ler PDF e resumo sobre "+topic,link(search(topic+" apostila PDF concurso"),"Buscar PDF")]);
-tasks.push(["questions","Resolver 10 questões: "+topic,link(search(topic+" questões comentadas concurso"),"Buscar questões")]);
-tasks.push(["correct","Corrigir as questões e entender os erros",""]);
+tasks.push(
+['video','Assistir à videoaula: '+topic,link(youtube(topic+' para concursos'),'Buscar videoaula no YouTube')],
+['pdf','Ler PDF e resumo sobre '+topic,link(search(topic+' apostila PDF concurso'),'Buscar PDF')],
+['questions','Resolver 10 questões: '+topic,link(search(topic+' questões comentadas concurso'),'Buscar questões')],
+['correct','Corrigir as questões e entender os erros','']
+);
 
 data.tasks[id]=data.tasks[id]||{};
-
-const checked=tasks.filter(x=>data.tasks[id][x[0]]).length;
 
 app.innerHTML=`
 <button class="back" onclick="openSubject(${s})">← Voltar à disciplina</button>
 <div class="card">
-<small>${subjects[s].icon} ${subjects[s].name}</small>
-<h2 style="margin-top:10px">${topic}</h2>
-<small>◷ Tempo sugerido: 2 horas</small>
-<progress id="session-progress" value="${checked}" max="${tasks.length}"></progress>
-<small id="session-count">${checked} de ${tasks.length} etapas concluídas</small>
+<small>${subjects[s].name} · 2 horas</small>
+<h2>${topic}</h2>
+<progress id="session" max="${tasks.length}" value="${tasks.filter(x=>data.tasks[id][x[0]]).length}"></progress>
+<small id="sessionText"></small>
 </div>
-<h2 class="section-title">Minha sessão de estudo</h2>
+<h2>Minha sessão de estudo</h2>
 <div class="card">
-${previous===null?'<p class="notice">Primeiro assunto: sem revisão anterior.</p>':""}
+${prev===null?'<p>Primeiro assunto: sem revisão anterior.</p>':''}
 ${tasks.map((x,i)=>`
 <div class="task">
-<div class="step">ETAPA ${String(i+1).padStart(2,"0")}</div>
+<small>ETAPA ${i+1}</small>
 <label>
-<input type="checkbox" ${data.tasks[id][x[0]]?"checked":""} ${data.done[id]?"disabled":""} onchange="mark('${id}','${x[0]}',this.checked)">
+<input type="checkbox" ${data.tasks[id][x[0]]?'checked':''} ${data.done[id]?'disabled':''} onchange="mark('${id}','${x[0]}',this.checked)">
 <span>${x[1]}</span>
 </label>
 ${x[2]}
-</div>`).join("")}
-<button style="${data.done[id]?"background:#16834b":""}" onclick="finish(${s},${t},${previous!==null})">${data.done[id]?"✓ Finalizado":"Finalizar conteúdo ✓"}</button>
+</div>`).join('')}
+<button onclick="finish(${s},${t},${prev!==null})">${data.done[id]?'✓ Finalizado':'Finalizar conteúdo'}</button>
 </div>`;
+updateSession();
 }
 
-function mark(id,k,value){
-data.tasks[id][k]=value;
-save();
-const bar=document.getElementById("session-progress");
-const text=document.getElementById("session-count");
-if(bar&&text){
-const n=app.querySelectorAll(".task input:checked").length;
-bar.value=n;
-text.textContent=n+" de "+bar.max+" etapas concluídas";
+function updateSession(){
+const p=document.getElementById('session');
+if(p){
+p.value=app.querySelectorAll('input:checked').length;
+document.getElementById('sessionText').textContent=p.value+' de '+p.max+' etapas concluídas';
 }
+}
+
+function mark(id,k,v){
+data.tasks[id][k]=v;
+save();
+updateSession();
 }
 
 function finish(s,t,review){
 const id=key(s,t);
 if(data.done[id])return;
-const required=["video","pdf","questions","correct"];
-if(review)required.push("review","old");
-if(!required.every(k=>data.tasks[id][k])){
-alert("Conclua todas as etapas primeiro.");
+const req=['video','pdf','questions','correct'];
+if(review)req.push('review','old');
+if(!req.every(k=>data.tasks[id][k])){
+alert('Conclua todas as etapas primeiro.');
 return;
 }
 data.done[id]=Date.now();
@@ -704,74 +361,61 @@ return d;
 }
 
 function simulation(){
-activate("tests");
-const start=weekStart();
-const end=new Date(start);
+active(2);
+const start=weekStart(),end=new Date(start);
 end.setDate(end.getDate()+7);
-const w=start.toISOString();
-const items=[];
+const w=start.toISOString(),items=[];
 
 subjects.forEach((s,i)=>s.topics.forEach((t,j)=>{
-const date=data.done[key(i,j)];
-if(date>=start.getTime()&&date<end.getTime())items.push({subject:s.name,topic:t});
+const d=data.done[key(i,j)];
+if(d>=start.getTime()&&d<end.getTime())items.push({subject:s.name,topic:t});
 }));
 
-const total=items.length*5;
+const n=items.length*5;
 
 app.innerHTML=`
 <h2>Simulado semanal</h2>
 <div class="card hero">
-<small>AVALIAÇÃO DA SEMANA</small>
-<div class="hero-number">${total}</div>
-<h2>Questões para resolver</h2>
-<small>5 questões por conteúdo estudado</small>
+<div class="big">${n}</div>
+Questões para resolver · 5 por assunto
 </div>
 <div class="card">
-<h2>Conteúdos do simulado</h2>
 ${items.map(x=>`
 <div class="task">
 <small>${x.subject}</small>
-<p><strong>${x.topic}</strong></p>
-<span class="status">5 questões</span>
-${link(search(x.topic+" questões concurso"),"Buscar questões")}
-</div>`).join("")}
-
-${data.tests[w]?`<p class="success">✓ Simulado concluído: ${data.tests[w].correct}/${data.tests[w].total} acertos.</p>`:total?`
-<label>Quantidade de acertos:
-<input id="score" type="number" min="0" max="${total}" placeholder="Digite seus acertos">
-</label>
-<button onclick="finishTest(${total})">Finalizar simulado</button>`:"<p>Nenhum assunto concluído nesta semana.</p>"}
+<p>${x.topic} — 5 questões</p>
+${link(search(x.topic+' questões concurso'),'Buscar questões')}
+</div>`).join('')}
+${data.tests[w]?`<p>✓ Simulado concluído: ${data.tests[w].correct}/${data.tests[w].total} acertos.</p>`:n?`
+<p>Quantidade de acertos:</p>
+<input id="score" type="number" min="0" max="${n}">
+<button onclick="finishTest(${n})">Finalizar simulado</button>`:'<p>Nenhum assunto concluído nesta semana.</p>'}
 </div>`;
 }
 
-function finishTest(total){
-const raw=document.getElementById("score").value;
-const correct=Number(raw);
-if(raw===""||!Number.isInteger(correct)||correct<0||correct>total){
-alert("Informe uma quantidade válida.");
+function finishTest(n){
+const raw=document.getElementById('score').value,c=Number(raw);
+if(raw===''||!Number.isInteger(c)||c<0||c>n){
+alert('Informe uma quantidade válida.');
 return;
 }
-data.tests[weekStart().toISOString()]={correct,total};
+data.tests[weekStart().toISOString()]={correct:c,total:n};
 save();
 simulation();
 }
 
 function progressPage(){
-activate("progress");
-const total=subjects.reduce((a,s)=>a+s.topics.length,0);
-const done=Object.keys(data.done).length;
-const days=new Set(Object.values(data.done).map(x=>new Date(x).toDateString())).size;
+active(3);
+app.innerHTML='<h2>Meu progresso</h2>'+hero()+`
+<div class="card metrics">
+<div><strong>${count()}</strong>Concluídos</div>
+<div><strong>${total-count()}</strong>Pendentes</div>
+<div><strong>${new Set(Object.values(data.done).map(x=>new Date(x).toDateString())).size}</strong>Dias de estudo</div>
+<div><strong>${Object.keys(data.tests).length}</strong>Simulados</div>
+</div>`+cards();
+}
 
-app.innerHTML=`
-<h2>Meu progresso</h2>
-<div class="card hero">
-<small>EVOLUÇÃO GERAL</small>
-<div class="hero-number">${Math.round(done/total*100)}%</div>
-<progress value="${done}" max="${total}"></progress>
-<small>${done} de ${total} conteúdos finalizados</small>
-</div>
-<div class="card">
-<h2>Meu desempenho</h2>
-<div class="metrics">
-<div class="metric"><strong>${done}</strong><small>Conteúdos concluídos</small></div>
-<div class="metric"><strong>${total-done}</strong><small>Conteú
+home();
+</script>
+</body>
+</html>
