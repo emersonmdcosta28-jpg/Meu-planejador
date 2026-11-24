@@ -1,1 +1,292 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meu Planejador</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5fa;font-family:Arial,sans-serif;color:#252536}
+header{background:#6941c6;color:white;padding:24px}
+main{max-width:800px;margin:auto;padding:16px}
+.card{background:white;border-radius:14px;padding:18px;margin-bottom:15px;border:1px solid #e5e5ed}
+button,a.btn{display:block;width:100%;padding:13px;margin-top:10px;background:#6941c6;color:white;border:0;border-radius:9px;text-decoration:none;text-align:center;font-size:15px;cursor:pointer}
+small{color:#777}
+h2{font-size:20px}
+label{display:block;padding:14px 0;border-bottom:1px solid #eee}
+input{accent-color:#6941c6}
+progress{width:100%;accent-color:#6941c6}
+nav{display:flex;gap:6px;padding:10px;background:white}
+nav button{font-size:12px;padding:10px 4px}
+</style>
+</head>
+<body>
+<header>
+<h2>Meu Planejador de Estudos</h2>
+Prefeitura de Imperatriz – MA
+</header>
+<nav>
+<button onclick="home()">Início</button>
+<button onclick="disciplines()">Disciplinas</button>
+<button onclick="simulation()">Simulados</button>
+<button onclick="progressPage()">Progresso</button>
+</nav>
+<main id="app"></main>
+<script>
+const subjects=[
+{name:"Língua Portuguesa",icon:"📘",topics:[
+"Compreensão e interpretação de textos",
+"Tipologias e gêneros textuais",
+"Coesão e coerência",
+"Variação linguística",
+"Figuras de linguagem",
+"Classes de palavras",
+"Sintaxe do período simples",
+"Sintaxe do período composto",
+"Concordância nominal",
+"Concordância verbal",
+"Regência nominal",
+"Regência verbal",
+"Denotação e conotação",
+"Homonímia, paronímia e ambiguidade",
+"Pontuação e sentido do texto",
+"Ortografia"
+]},
+{name:"Matemática",icon:"📐",topics:[
+"Sistema de numeração decimal",
+"Números inteiros: operações e propriedades",
+"Múltiplos e divisores",
+"MDC e MMC",
+"Números racionais: operações e problemas",
+"Razões e proporções",
+"Divisão proporcional",
+"Regra de três simples",
+"Regra de três composta",
+"Porcentagem",
+"Juros simples",
+"Sistemas de medidas decimais e não decimais",
+"Números reais",
+"Expressões e operações algébricas",
+"Fatoração e frações algébricas",
+"Equações e inequações do primeiro grau",
+"Equações e inequações do segundo grau",
+"Sistemas de equações do primeiro e segundo graus",
+"Funções: domínio, imagem, gráficos e raízes",
+"Funções: crescimento, composição e inversão",
+"Função do primeiro grau",
+"Função do segundo grau",
+"Função exponencial",
+"Função logarítmica",
+"Princípio fundamental da contagem",
+"Arranjos simples e com repetição",
+"Combinações simples e com repetição",
+"Permutações simples e com repetição",
+"Probabilidade: conceito e cálculo",
+"Adição e multiplicação de probabilidades",
+"Dependência de eventos",
+"Progressão aritmética",
+"Progressão geométrica",
+"Sistemas lineares: resolução e discussão",
+"Geometria plana: conceitos primitivos e ângulos",
+"Triângulos e quadriláteros",
+"Polígonos e circunferência",
+"Teorema de Tales",
+"Semelhança de triângulos",
+"Relações métricas no triângulo retângulo",
+"Razões trigonométricas",
+"Áreas de figuras planas",
+"Geometria espacial: superfícies e volumes",
+"Estatística: médias, frequências e gráficos"
+]},
+{name:"Raciocínio Lógico",icon:"🧠",topics:[
+"Estruturas lógicas",
+"Proposições e conectivos",
+"Tabelas-verdade",
+"Negação e equivalência lógica",
+"Lógica de argumentação",
+"Diagramas lógicos",
+"Situações-problema"
+]},
+{name:"Noções de Informática",icon:"💻",topics:[
+"Computadores: conceitos, utilização e tipos",
+"Hardware, periféricos e conexões",
+"Redes cabeadas e wireless",
+"Dispositivos móveis",
+"Organização de dados e informações",
+"Processamento e armazenamento de dados",
+"Banco de dados e representação numérica",
+"Windows",
+"Linux",
+"Gerenciamento e ferramentas de sistema",
+"Software e aplicativos",
+"Linguagens de programação",
+"Microsoft Office",
+"LibreOffice",
+"Sistemas de informação e ERP",
+"Sistemas gráficos e mapas",
+"Realidade virtual e aumentada",
+"Redes de computadores",
+"Internet: serviços e protocolos",
+"Navegadores e mecanismos de busca",
+"Acesso e compartilhamento de recursos",
+"Intranet e extranet",
+"Comunicação e redes sociais",
+"Computação em nuvem",
+"Virtualização",
+"Backup",
+"Segurança da informação",
+"Malwares e prevenção",
+"Invasões e outras ameaças"
+]},
+{name:"História e Geografia de Imperatriz",icon:"📍",topics:[
+"História, origem e fundação",
+"Desenvolvimento histórico do município",
+"Geografia, localização e território",
+"Dados oficiais do IBGE",
+"Informações históricas e geográficas oficiais",
+"Símbolos municipais: Lei 346/1985",
+"Lei Municipal 1389/2010",
+"Feriados municipais: Lei 370/85-GAB",
+"Limites geográficos e área urbana: Lei 923/200 (referência a conferir)",
+"Lei Municipal 1346/2010",
+"Lei Municipal 1738/2018"
+]}
+];
+
+let data=JSON.parse(localStorage.getItem("meuPlanejador")||"{}");
+data.done=data.done||{};
+data.tasks=data.tasks||{};
+data.previous=data.previous||{};
+data.tests=data.tests||{};
+
+const app=document.getElementById("app");
+const key=(s,t)=>s+"-"+t;
+const save=()=>localStorage.setItem("meuPlanejador",JSON.stringify(data));
+const search=q=>"https://www.google.com/search?q="+encodeURIComponent(q);
+const youtube=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+const link=(url,text)=>`<a class="btn" target="_blank" rel="noopener" href="${url}">${text}</a>`;
+
+function next(s){
+return subjects[s].topics.findIndex((x,t)=>!data.done[key(s,t)]);
+}
+
+function home(){
+const day=new Date().getDay();
+const week=Math.floor((Date.now()-new Date(2026,10,23).getTime())/604800000);
+const rotation=[3,2,4];
+const s=({1:0,2:1,3:rotation[((week%3)+3)%3],4:0,5:1})[day];
+app.innerHTML=`<p>${new Date().toLocaleDateString("pt-BR",{dateStyle:"full"})}</p><h2>O que estudar hoje?</h2>`;
+if(day===0){
+app.innerHTML+=`<div class="card">Domingo: descanso.</div>`;
+}else if(day===6){
+app.innerHTML+=`<div class="card"><h2>Simulado semanal</h2><button onclick="simulation()">Realizar simulado</button></div>`;
+}else{
+const today=new Date().toDateString();
+const finished=subjects[s].topics.some((x,t)=>data.done[key(s,t)]&&new Date(data.done[key(s,t)]).toDateString()===today);
+const t=next(s);
+app.innerHTML+=`<div class="card"><small>${subjects[s].name}</small><h2>${finished?"Estudo de hoje concluído ✓":t<0?"Disciplina concluída":subjects[s].topics[t]}</h2>${t>=0?`<button onclick="lesson(${s},${t})">${finished?"Adiantar próximo assunto":"Iniciar estudo"}</button>`:""}</div>`;
+}
+app.innerHTML+=`<h2>Minhas disciplinas</h2>`+cards();
+}
+
+function cards(){
+return subjects.map((s,i)=>{
+const n=s.topics.filter((x,t)=>data.done[key(i,t)]).length;
+return `<div class="card"><h2>${s.icon} ${s.name}</h2><progress value="${n}" max="${s.topics.length}"></progress><small>${n} de ${s.topics.length} conteúdos concluídos</small><button onclick="openSubject(${i})">Abrir disciplina</button></div>`;
+}).join("");
+}
+
+function disciplines(){
+app.innerHTML="<h2>Minhas disciplinas</h2>"+cards();
+}
+
+function openSubject(s){
+app.innerHTML=`<h2>${subjects[s].name}</h2>`+subjects[s].topics.map((t,i)=>`<div class="card"><strong>${t}</strong><p><small>${data.done[key(s,i)]?"✅ Concluído":"Pendente"}</small></p><button onclick="lesson(${s},${i})">${data.done[key(s,i)]?"Consultar":"Estudar"}</button></div>`).join("");
+}
+
+function lesson(s,t){
+const id=key(s,t);
+const topic=subjects[s].topics[t];
+if(!(id in data.previous)){
+const previous=subjects[s].topics.map((x,i)=>i).filter(i=>i!==t&&data.done[key(s,i)]).sort((a,b)=>data.done[key(s,b)]-data.done[key(s,a)])[0];
+data.previous[id]=previous===undefined?null:previous;
+save();
+}
+const previous=data.previous[id];
+const tasks=[];
+if(previous!==null){
+const old=subjects[s].topics[previous];
+tasks.push(["review","Revisar: "+old,""]);
+tasks.push(["old","Resolver 10 questões: "+old,link(search(old+" questões concurso"),"Buscar questões anteriores")]);
+}
+tasks.push(["video","Assistir à videoaula: "+topic,link(youtube(topic+" para concursos"),"Buscar videoaula no YouTube")]);
+tasks.push(["pdf","Ler PDF e resumo sobre "+topic,link(search(topic+" apostila PDF concurso"),"Buscar PDF")]);
+tasks.push(["questions","Resolver 10 questões: "+topic,link(search(topic+" questões comentadas concurso"),"Buscar questões")]);
+tasks.push(["correct","Corrigir as questões e entender os erros",""]);
+data.tasks[id]=data.tasks[id]||{};
+app.innerHTML=`<button onclick="openSubject(${s})">Voltar à disciplina</button><h2>${topic}</h2><div class="card"><h2>Minha sessão de estudo</h2><small>Tempo sugerido: 2 horas</small>${previous===null?"<p>Primeiro assunto: sem revisão anterior.</p>":""}${tasks.map(x=>`<label><input type="checkbox" ${data.tasks[id][x[0]]?"checked":""} ${data.done[id]?"disabled":""} onchange="mark('${id}','${x[0]}',this.checked)"> ${x[1]}</label>${x[2]}`).join("")}<button onclick="finish(${s},${t},${previous!==null})">${data.done[id]?"✓ Finalizado":"Finalizar conteúdo"}</button></div>`;
+}
+
+function mark(id,k,value){
+data.tasks[id][k]=value;
+save();
+}
+
+function finish(s,t,review){
+const id=key(s,t);
+if(data.done[id])return;
+const required=["video","pdf","questions","correct"];
+if(review)required.push("review","old");
+if(!required.every(k=>data.tasks[id][k])){
+alert("Conclua todas as etapas primeiro.");
+return;
+}
+data.done[id]=Date.now();
+save();
+openSubject(s);
+}
+
+function weekStart(){
+const d=new Date();
+d.setHours(0,0,0,0);
+d.setDate(d.getDate()-((d.getDay()+6)%7));
+return d;
+}
+
+function simulation(){
+const start=weekStart();
+const end=new Date(start);
+end.setDate(end.getDate()+7);
+const w=start.toISOString();
+const items=[];
+subjects.forEach((s,i)=>s.topics.forEach((t,j)=>{
+const date=data.done[key(i,j)];
+if(date>=start.getTime()&&date<end.getTime())items.push({subject:s.name,topic:t});
+}));
+const total=items.length*5;
+app.innerHTML=`<h2>Simulado semanal</h2><div class="card"><p>Resolva 5 questões de cada assunto estudado nesta semana.</p>${items.map(x=>`<p><strong>${x.subject}</strong><br>${x.topic} — 5 questões</p>${link(search(x.topic+" questões concurso"),"Buscar questões")}`).join("")}<h2>Total: ${total} questões</h2>${data.tests[w]?`<p>Simulado concluído: ${data.tests[w].correct}/${data.tests[w].total} acertos.</p>`:total?`<label>Quantidade de acertos: <input id="score" type="number" min="0" max="${total}"></label><button onclick="finishTest(${total})">Finalizar simulado</button>`:"<p>Nenhum assunto concluído nesta semana.</p>"}</div>`;
+}
+
+function finishTest(total){
+const raw=document.getElementById("score").value;
+const correct=Number(raw);
+if(raw===""||!Number.isInteger(correct)||correct<0||correct>total){
+alert("Informe uma quantidade válida.");
+return;
+}
+data.tests[weekStart().toISOString()]={correct,total};
+save();
+simulation();
+}
+
+function progressPage(){
+const total=subjects.reduce((a,s)=>a+s.topics.length,0);
+const done=Object.keys(data.done).length;
+app.innerHTML=`<h2>Meu progresso</h2><div class="card"><h2>${Math.round(done/total*100)}% concluído</h2><progress value="${done}" max="${total}"></progress><p>${done} de ${total} conteúdos finalizados</p><p>${Object.keys(data.tests).length} simulados realizados</p></div>`+cards();
+}
+
+home();
+</script>
+</body>
+</html>
